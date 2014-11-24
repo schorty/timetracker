@@ -50,7 +50,7 @@ module DaysHelper
       content = if day_content
         draw_calendar_day_content(day_content)
       else
-        link_to('+', new_day_path(beginning_of_day: current_day), class: 'btn btn-default calendar-entry-add-day')
+        link_to(fa_icon('plus'), new_day_path(beginning_of_day: current_day), class: 'btn btn-default calendar-entry-add-day')
       end
 
       [
@@ -63,11 +63,19 @@ module DaysHelper
   def draw_calendar_day_content(content)
     [
       content_tag(:div, nil, class: 'calendar-entry-day') do
-        [
-          content_tag(:span, content.business, class: 'calendar-entry-day-line')
-        ].join.html_safe
+        day_entry = []
+        
+        day_entry << content_tag(:div, content.business, class: 'calendar-entry-day-line bold')
+        day_entry << content_tag(:div, '%s Hours' % content.hours_worked, class: 'calendar-entry-day-line bold') if content.hours_worked
+
+        content.notices.each do |notice|
+          day_entry << content_tag(:div, link_to(notice.title, day_notice_path(content, notice)), class: 'calendar-entry-day-line')
+        end
+
+        day_entry.join.html_safe
       end,
-      link_to(fa_icon('pencil'), edit_day_path(content), class: 'btn btn-default calendar-entry-show-day')
-      ].join.html_safe
+      link_to(fa_icon('file-o'), new_day_notice_path(content), class: 'btn btn-default calendar-entry-add-notice'),
+      link_to(fa_icon('pencil'), edit_day_path(content), class: 'btn btn-default calendar-entry-edit-day')
+    ].join.html_safe
   end
 end

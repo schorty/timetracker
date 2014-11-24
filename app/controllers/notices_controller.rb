@@ -1,5 +1,6 @@
 class NoticesController < ApplicationController
   before_action :set_notice, only: [:show, :edit, :update, :destroy]
+  before_action :set_day
 
   def index
     @notices = Notice.all
@@ -9,17 +10,17 @@ class NoticesController < ApplicationController
   end
 
   def new
-    @notice = Notice.new
+    @notice = @day.notices.build
   end
 
   def edit
   end
 
   def create
-    @notice = Notice.new(notice_params)
+    @notice = @day.notices.build(notice_params)
 
     if @notice.save
-      redirect_to @notice, notice: 'Notice was successfully created.'
+      redirect_to days_path, notice: 'Notice was successfully created.'
     else
       render :new
     end
@@ -27,7 +28,7 @@ class NoticesController < ApplicationController
 
   def update
     if @notice.update(notice_params)
-      redirect_to @notice, notice: 'Notice was successfully updated.'
+      redirect_to days_path, notice: 'Notice was successfully updated.'
     else
       render :edit
     end
@@ -35,7 +36,7 @@ class NoticesController < ApplicationController
 
   def destroy
     @notice.destroy
-    redirect_to notices_url, notice: 'Notice was successfully destroyed.'
+    redirect_to days_path, notice: 'Notice was successfully destroyed.'
   end
 
   private
@@ -46,5 +47,9 @@ class NoticesController < ApplicationController
 
   def notice_params
     params.require(:notice).permit(:title, :content, :day_id)
+  end
+
+  def set_day
+    @day = Day.find(params[:day_id])
   end
 end

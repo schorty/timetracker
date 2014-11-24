@@ -37,9 +37,12 @@ body {
   overflow: hidden;
   right: 0;
   top: 48px;
+  .bold {
+    font-weight: 600;
+  }
   .calendar-row, .calendar-head {
-    position: relative;
     height: 14.286%;
+    position: relative;
     .calendar-entry,
     .calendar-column-label,
     .calendar-row-label {
@@ -53,11 +56,11 @@ body {
       background-color: #ddd;
       position: relative;
       .calendar-entry-day {
+        padding-top: 20px;
         position: relative;
         .calendar-entry-day-line {
           position: relative;
-          right: 0;
-          top: 12px;
+          left: 8px;
         }
       }
       .calendar-entry-day-label {
@@ -66,9 +69,14 @@ body {
         top: 0;
       }
       .calendar-entry-add-day,
-      .calendar-entry-show-day {
-        position: absolute;
+      .calendar-entry-edit-day {
         bottom: 5px;
+        position: absolute;
+        right: 5px;
+      }
+      .calendar-entry-add-notice {
+        bottom: 43px;
+        position: absolute;
         right: 5px;
       }
     }
