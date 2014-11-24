@@ -10,10 +10,10 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require bootstrap_and_overrides.css
- *= require bootstrap-datetimepicker
- *= require_tree .
+ *= require bootstrap
+ *= require font-awesome
  *= require_self
+ *= require_tree .
  */
 
 html {
@@ -40,7 +40,9 @@ body {
   .calendar-row, .calendar-head {
     position: relative;
     height: 14.286%;
-    .calendar-entry, .calendar-column-label, .calendar-row-label {
+    .calendar-entry,
+    .calendar-column-label,
+    .calendar-row-label {
       border-right: 1px solid grey;
       border-bottom: 1px solid grey;
       float: left;
@@ -55,6 +57,7 @@ body {
         .calendar-entry-day-line {
           position: relative;
           right: 0;
+          top: 12px;
         }
       }
       .calendar-entry-day-label {
@@ -62,13 +65,15 @@ body {
         position: absolute;
         top: 0;
       }
-      .calendar-entry-add-day {
+      .calendar-entry-add-day,
+      .calendar-entry-show-day {
         position: absolute;
         bottom: 5px;
         right: 5px;
       }
     }
-    .calendar-column-label, .calendar-row-label {
+    .calendar-column-label,
+    .calendar-row-label {
       background-color: #aaa;
     }
     .calendar-weekend {

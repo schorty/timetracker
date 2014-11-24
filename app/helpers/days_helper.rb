@@ -61,11 +61,13 @@ module DaysHelper
   end
 
   def draw_calendar_day_content(content)
-    content_tag(:div, nil, class: 'calendar-entry-day') do
-      [
-        # TODO: positioning of text
-        content_tag(:span, content.business, class: 'calendar-entry-day-line')
+    [
+      content_tag(:div, nil, class: 'calendar-entry-day') do
+        [
+          content_tag(:span, content.business, class: 'calendar-entry-day-line')
+        ].join.html_safe
+      end,
+      link_to(fa_icon('pencil'), edit_day_path(content), class: 'btn btn-default calendar-entry-show-day')
       ].join.html_safe
-    end
   end
 end

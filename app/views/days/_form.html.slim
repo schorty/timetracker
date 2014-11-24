@@ -8,7 +8,7 @@
 
   .field
     = f.label :beginning_of_day
-    = f.date_select :beginning_of_day, value: (@day.new_record? ? params[:beginning_of_day] : @day.name )
+    = f.date_select :beginning_of_day, value: (@day.new_record? ? params[:beginning_of_day] : Time.now )
   .field
     = f.label :hours_worked
     = f.text_field :hours_worked
