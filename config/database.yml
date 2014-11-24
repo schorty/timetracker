@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  port: 5432
+  username: calendar
+  password: calendar
+  pool: 5
+
+development:
+  <<: *default
+  database: calendar_development
+
+test:
+  <<: *default
+  database: calendar_test
+
+production:
+  <<: *default
+  database: calendar_production

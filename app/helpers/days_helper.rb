@@ -1,0 +1,71 @@
+module DaysHelper
+  def draw_calendar(day)
+    day_start = day.beginning_of_week
+    day_end = day_start + 41.days
+
+    days = @days.where(beginning_of_day: (day_start..day_end)).order(:beginning_of_day).to_a
+
+    [
+      draw_calendar_head,
+      draw_calendar_content(day_start, day, days)
+    ].join.html_safe
+  end
+
+  def draw_calendar_head
+    content_tag(:div, nil, class: 'calendar-head') do
+      ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map do |column_label|
+        content_tag(:div, column_label, class: 'calendar-column-label' + (['Sat', 'Sun'].include?(column_label) ? ' calendar-weekend' : ''))
+      end.join.html_safe
+    end
+  end
+
+  def draw_calendar_content(current_day, selected_day, days)
+    (0..5).map do |row|
+      content_tag(:div, nil, class: 'calendar-row') do
+        (0..7).map do |column|
+          if column == 0
+            out = draw_calendar_week_number(current_day, row)
+          else
+            day_content = days.find { |d| d.beginning_of_day.to_s == current_day.strftime('%Y-%m-%d').to_s }
+            out = draw_calendar_day(current_day, day_content, row, column)
+            current_day += 1.day
+          end
+
+          out
+        end.join.html_safe
+      end
+    end
+  end
+
+  def draw_calendar_week_number(current_day, row)
+    content_tag(:div, data: {row: row, column: 0}, class: 'calendar-row-label') do
+      content_tag(:span, current_day.strftime('CW %V'))
+    end
+  end
+
+  def draw_calendar_day(current_day, day_content, row, column)
+    content_tag(:div, data: {row: row, column: column}, class: 'calendar-entry' + (column > 5 ? ' calendar-weekend' : '')) do
+      label = content_tag(:span, current_day.strftime('%d'), class: 'calendar-entry-day-label')
+
+      content = if day_content
+        draw_calendar_day_content(day_content)
+      else
+        link_to('+', new_day_path(beginning_of_day: current_day), class: 'btn btn-default calendar-entry-add-day')
+      end
+
+      [
+        label,
+        content
+      ].join.html_safe
+    end
+  end
+
+  def draw_calendar_day_content(content)
+    content_tag(:div, nil, class: 'calendar-entry-day') do
+      [
+        # TODO: positioning of text
+        content_tag(:span, content.business, class: 'calendar-entry-day-line')
+      ].join.html_safe
+    end
+  end
+end

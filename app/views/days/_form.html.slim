@@ -1,0 +1,18 @@
+= form_for @day do |f|
+  - if @day.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@day.errors.count, "error")} prohibited this day from being saved:"
+      ul
+        - @day.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :beginning_of_day
+    = f.date_select :beginning_of_day, value: (@day.new_record? ? params[:beginning_of_day] : @day.name )
+  .field
+    = f.label :hours_worked
+    = f.text_field :hours_worked
+  .field
+    = f.label :business
+    = f.select :business, options_for_select({'Work time' => :work_time, 'Home time' => :home_time, 'School' => :school, 'Vacation' => :vacation, 'Illness' => :illness}, 'Work time')
+  .actions = f.submit 'Save'

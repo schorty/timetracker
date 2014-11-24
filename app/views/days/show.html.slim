@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Beginning of day:
+  = @day.beginning_of_day
+p
+  strong Hours worked:
+  = @day.hours_worked
+p
+  strong Business:
+  = @day.business
+
+= link_to 'Edit', edit_day_path(@day)
+'|
+= link_to 'Back', days_path
