@@ -56,11 +56,13 @@ body {
       background-color: #ddd;
       position: relative;
       .calendar-entry-day {
-        padding-top: 20px;
+        line-height: 12px;
+        padding-top: 18px;
         position: relative;
         .calendar-entry-day-line {
-          position: relative;
           left: 8px;
+          line-height: 14px;
+          position: relative;
         }
       }
       .calendar-entry-day-label {
