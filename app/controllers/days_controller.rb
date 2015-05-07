@@ -3,6 +3,10 @@ class DaysController < ApplicationController
 
   def index
     @days = Day.all
+
+    # @statistics_admin = StaticsAdministrator.new()
+    # @statistics_calculator = StatisticsCalculator.new(:all)
+    # @statistics = @statistics_calculator.perform
   end
 
   def show
