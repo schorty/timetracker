@@ -39,7 +39,11 @@ module DaysHelper
 
   def draw_calendar_week_number(current_day, row)
     content_tag(:div, data: {row: row, column: 0}, class: 'calendar-row-label') do
-      content_tag(:span, current_day.strftime('CW %V'))
+      output = [
+        content_tag(:div, current_day.strftime('CW %V')),
+        content_tag(:div, "Overtime: " + @statistics[:"week#{row + 1}"].printh(:overtime)),
+        content_tag(:div, "Hours worked : " + @statistics[:"week#{row + 1}"].printh(:hours_worked))
+      ].join.html_safe
     end
   end
 
@@ -64,7 +68,7 @@ module DaysHelper
     [
       content_tag(:div, nil, class: 'calendar-entry-day') do
         day_entry = []
-        
+
         day_entry << content_tag(:div, content.business, class: 'calendar-entry-day-line bold')
         day_entry << content_tag(:div, '%s Hours' % content.hours_worked, class: 'calendar-entry-day-line bold') if content.hours_worked
 

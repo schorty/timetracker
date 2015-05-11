@@ -2,11 +2,9 @@ class DaysController < ApplicationController
   before_action :set_day, only: [:show, :edit, :update, :destroy]
 
   def index
-    @days = Day.all
-
-    # @statistics_admin = StaticsAdministrator.new()
-    # @statistics_calculator = StatisticsCalculator.new(:all)
-    # @statistics = @statistics_calculator.perform
+    @days = Day.all.includes(:notices)
+    sa = CalendarStatistics::StatisticsAdministrator.new(:all)
+    @statistics = sa.perform
   end
 
   def show

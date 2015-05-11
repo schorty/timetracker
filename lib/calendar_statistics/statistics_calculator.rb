@@ -1,36 +1,39 @@
 class CalendarStatistics::StatisticsCalculator
-  def initialize(periods = [])
+  def initialize(periods = {})
     @periods = periods
   end
 
   def perform
-    output = []
+    output = {}
 
-    @periods.each do |period|
-      output < get_statistics_for(period['period_start'], period['period_length'])
+    @periods.each do |period_name, period|
+      output[period_name] = get_statistics_for(period)
     end
 
     output
   end
 
-  def get_statistics_for(period_start, period_end)
-    period_start = [period_start, period_end].min
-    period_end   = [period_start, period_end].max
+  private
 
-    work_days = Day.all
+  def get_statistics_for(period)
+    work_days = Day
       .select('1, SUM(hours_worked - 8) AS overtime, SUM(hours_worked) as hours_worked')
-      .where(["beginning_of_day BETWEEN ? AND ?", period_start, period_end])
-      .where(business: 0..1)
+      .where(['beginning_of_day BETWEEN ? AND ?', period.start, period.end])
       .group(1)
+      .find_by(business: 0..1)
 
-    non_work_days = Day.all
+    non_work_days = Day
       .select('1, SUM(hours_worked) AS overtime, SUM(hours_worked) as hours_worked')
-      .where(["beginning_of_day BETWEEN ? AND ?", period_start, period_end])
-      .where(business: 2..3)
+      .where(['beginning_of_day BETWEEN ? AND ?', period.start, period.end])
       .group(1)
+      .find_by(business: 2..3)
 
-    result = work_days.merge(non_work_days){|k, old_v, new_v| old_v + new_v}
+    hours_worked = work_days.nil? ? 0.0 : work_days.hours_worked
+    hours_worked += non_work_days.hours_worked if non_work_days
 
-    Statistics.new(result['hours_worked'], result['overtime'])
+    overtime = work_days.nil? ? 0.0 : work_days.overtime
+    overtime += non_work_days.overtime if non_work_days
+
+    CalendarStatistics::Statistics.new(hours_worked: hours_worked.round(2), overtime: overtime.round(2))
   end
 end
