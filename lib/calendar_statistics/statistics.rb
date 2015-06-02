@@ -6,7 +6,7 @@ class CalendarStatistics::Statistics
     @overtime = overtime
   end
 
-  def printh(time)
+  def printh(time = :overtime)
     if time == :overtime
       hours = @overtime.to_i
       minutes = ((@overtime % 1) * 60).to_i

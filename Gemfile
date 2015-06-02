@@ -31,7 +31,10 @@ group :development, :test do
   gem 'pry-rails',             '0.3.2'
   gem 'pry-rescue',         '~> 1.4'
   gem 'pry-stack_explorer',    '0.4.9.1'
-  gem 'rspec-rails',        '~> 3.1'
-  gem 'rspec-collection_matchers', '~> 1.0'
+  gem 'rspec-rails',        '~> 3.2'
   gem 'spring-commands-rspec', '~> 1.0'
+end
+
+group :test do
+  gem 'nyan-cat-formatter'
 end
