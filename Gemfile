@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '2.2.1'
 gem 'rails',                '~> 4.2'
 
 gem 'faker',                '~> 1.4'
@@ -37,4 +36,5 @@ end
 
 group :test do
   gem 'nyan-cat-formatter'
+  gem 'timecop', '~> 0.7'
 end

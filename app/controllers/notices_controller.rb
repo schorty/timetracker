@@ -1,6 +1,6 @@
 class NoticesController < ApplicationController
   before_action :set_notice, only: [:show, :edit, :update, :destroy]
-  before_action :set_day
+  before_action :set_day, only: [:create, :new]
 
   def index
     @notices = Notice.all
@@ -40,7 +40,7 @@ class NoticesController < ApplicationController
   end
 
   private
-  
+
   def set_notice
     @notice = Notice.find(params[:id])
   end

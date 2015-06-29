@@ -1,8 +1,14 @@
-h1 Editing day
+.row
+  .col-md-4.col-xs-12
+    h1 Editing day
 
-== render 'form'
+.row
+  == render 'form'
 
-= link_to 'Show', @day
-'|
-= link_to 'Back', days_path
-
+- if @day.notices.any?
+  .row
+    .col-md-12.col-xs-12
+      h2 Notices
+    - @day.notices.each do |notice|
+      .col-md-12.col-xs-12
+        = link_to notice.title, notice_path(notice)

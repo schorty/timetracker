@@ -18,13 +18,13 @@ class CalendarStatistics::StatisticsCalculator
   def get_statistics_for(period)
     work_days = Day
       .select('1, SUM(hours_worked - 8) AS overtime, SUM(hours_worked) as hours_worked')
-      .where(['beginning_of_day BETWEEN ? AND ?', period.start, period.end])
+      .where('beginning_of_day BETWEEN ? AND ?', period.start, period.end)
       .group(1)
       .find_by(business: 0..1)
 
     non_work_days = Day
       .select('1, SUM(hours_worked) AS overtime, SUM(hours_worked) as hours_worked')
-      .where(['beginning_of_day BETWEEN ? AND ?', period.start, period.end])
+      .where('beginning_of_day BETWEEN ? AND ?', period.start, period.end)
       .group(1)
       .find_by(business: 2..3)
 

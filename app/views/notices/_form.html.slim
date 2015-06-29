@@ -1,15 +1,16 @@
 = form_for [@day, @notice] do |f|
-  - if @notice.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@notice.errors.count, "error")} prohibited this notice from being saved:"
-      ul
-        - @notice.errors.full_messages.each do |message|
-          li = message
+  .col-md-4.col-xs-12
+    - if @notice.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(@notice.errors.count, "error")} prohibited this notice from being saved:"
+        ul
+          - @notice.errors.full_messages.each do |message|
+            li = message
 
-  .field
-    = f.label :title
-    = f.text_field :title
-  .field
-    = f.label :content
-    = f.text_area :content
-  .actions = f.submit 'Save'
+    .form-group
+      = f.label :title
+      = f.text_field :title, class: 'form-control'
+    .form-group
+      = f.label :content
+      = f.text_area :content, class: 'form-control'
+    .actions = f.submit 'Save', class: 'btn btn-default'

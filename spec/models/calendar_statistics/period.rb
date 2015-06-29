@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CalendarStatistics::Period, :type => :model do
+RSpec.describe CalendarStatistics::Period, type: :model do
   subject { CalendarStatistics::Period.new(Time.now - 10.days, Time.now) }
 
   describe "Period" do

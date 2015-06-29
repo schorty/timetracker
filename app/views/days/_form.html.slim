@@ -1,18 +1,38 @@
 = form_for @day do |f|
-  - if @day.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@day.errors.count, "error")} prohibited this day from being saved:"
-      ul
-        - @day.errors.full_messages.each do |message|
-          li = message
+  .col-md-4.col-xs-12
+    - if @day.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(@day.errors.count, "error")} prohibited this day from being saved:"
+        ul
+          - @day.errors.full_messages.each do |message|
+            li = message
+    .form-group
+      = f.label :beginning_of_day
+      / = f.date_select :beginning_of_day, value: (@day.new_record? ? Time.now : params[:beginning_of_day] ), html_options: {class: 'form-control'}
+      input#datepicker.form-control name="day[beginning_of_day]" value==(@day.new_record? ? Time.now.strftime('%Y-%m-%d') : @day.beginning_of_day.to_formatted_s(:db))
+    .form-group
+      = f.label :hours_worked
+      = f.text_field :hours_worked, id: "hours-worked-field", class: 'form-control'
+    .form-group
+      .btn-group
+        a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="6"
+          | 6h
+        a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="8"
+          | 8h
+        a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="9"
+          | 9h
+    .form-group
+      = f.label :business
+      = f.select :business, options_for_select({'Work time' => :work_time, 'Home time' => :home_time, 'School' => :school, 'Vacation' => :vacation, 'Illness' => :illness}, 'Work time'), {}, class: 'form-control'
+    .actions = f.submit 'Save', class: 'btn btn-default'
 
-  .field
-    = f.label :beginning_of_day
-    = f.date_select :beginning_of_day, value: (@day.new_record? ? params[:beginning_of_day] : Time.now )
-  .field
-    = f.label :hours_worked
-    = f.text_field :hours_worked
-  .field
-    = f.label :business
-    = f.select :business, options_for_select({'Work time' => :work_time, 'Home time' => :home_time, 'School' => :school, 'Vacation' => :vacation, 'Illness' => :illness}, 'Work time')
-  .actions = f.submit 'Save'
+javascript:
+  $(document).ready(function() {
+    $('#datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+    })
+  })
+
+  $('a.btn-hours-worked').on('click', function() {
+    $('#hours-worked-field').val($(this).data('hours'))
+  })

@@ -1,14 +1,7 @@
-p#notice = notice
+span.help-block = notice
 
-p
-  strong Title:
-  = @notice.title
-p
-  strong Content:
-  = @notice.content
-p
-  strong Day:
-  = @notice.day_id
+.row
+  h1= @notice.title
+  p= @notice.content
 
-= link_to 'Edit', edit_notice_path(@notice)
-
+  = link_to 'Edit', edit_notice_path(@notice)

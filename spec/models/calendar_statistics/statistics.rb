@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CalendarStatistics::Statistics, :type => :model do
+RSpec.describe CalendarStatistics::Statistics, type: :model do
   subject { CalendarStatistics::Statistics.new }
 
   describe "Statistics" do

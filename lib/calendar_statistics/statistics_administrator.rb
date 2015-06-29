@@ -22,21 +22,21 @@ class CalendarStatistics::StatisticsAdministrator
   end
 
   def get_period_for_year
-    @periods_to_calculate[:year] = CalendarStatistics::Period.new(Time.now.beginning_of_year, Time.now.end_of_year)
+    @periods_to_calculate[:year] = CalendarStatistics::Period.new(Time.now.beginning_of_year, Time.now.end_of_year.beginning_of_day)
   end
 
   def get_period_for_month
-    @periods_to_calculate[:month] = CalendarStatistics::Period.new(Time.now.beginning_of_month, Time.now.end_of_month)
+    @periods_to_calculate[:month] = CalendarStatistics::Period.new(Time.now.beginning_of_month, Time.now.end_of_month.end_of_day)
   end
 
   def get_period_for_week
-    @periods_to_calculate[:week] = CalendarStatistics::Period.new(Time.now.beginning_of_week, Time.now.end_of_week)
+    @periods_to_calculate[:week] = CalendarStatistics::Period.new(Time.now.beginning_of_week.end_of_day, Time.now.end_of_week.beginning_of_day)
   end
 
   def get_periods_for_weeks
     6.times do |i|
-      start = Time.now.end_of_month + 1.week - i.weeks
-      @periods_to_calculate[:"week#{6 - i}"] = CalendarStatistics::Period.new(start.beginning_of_week, start.end_of_week)
+      start = Time.now.end_of_month.end_of_week.beginning_of_day + (1 - i).weeks
+      @periods_to_calculate[:"week#{6 - i}"] = CalendarStatistics::Period.new(start.beginning_of_week.end_of_day, start.end_of_week.beginning_of_day)
     end
   end
 

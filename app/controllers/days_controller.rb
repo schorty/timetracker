@@ -21,7 +21,7 @@ class DaysController < ApplicationController
     @day = Day.new(day_params)
 
     if @day.save
-      redirect_to @day, notice: 'Day was successfully created.'
+      redirect_to days_url, notice: 'Day was successfully created.'
     else
       render :new
     end
@@ -29,7 +29,7 @@ class DaysController < ApplicationController
 
   def update
     if @day.update(day_params)
-      redirect_to @day, notice: 'Day was successfully updated.'
+      redirect_to days_url, notice: 'Day was successfully updated.'
     else
       render :edit
     end
@@ -41,11 +41,12 @@ class DaysController < ApplicationController
   end
 
   private
-    def set_day
-      @day = Day.find(params[:id])
-    end
 
-    def day_params
-      params.require(:day).permit(:beginning_of_day, :hours_worked, :business)
-    end
+  def set_day
+    @day = Day.find(params[:id])
+  end
+
+  def day_params
+    params.require(:day).permit(:beginning_of_day, :hours_worked, :business)
+  end
 end

@@ -210,6 +210,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
+    timecop (0.7.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
 
@@ -243,4 +244,5 @@ DEPENDENCIES
   spring (~> 1.1)
   spring-commands-rspec (~> 1.0)
   therubyracer
+  timecop (~> 0.7)
   twitter-bootstrap-rails!

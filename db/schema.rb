@@ -16,16 +16,15 @@ ActiveRecord::Schema.define(version: 20141104114328) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "days", force: true do |t|
+  create_table "days", force: :cascade do |t|
     t.date     "beginning_of_day"
     t.float    "hours_worked"
-    t.integer  "day_of_week"
     t.integer  "business"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "notices", force: true do |t|
+  create_table "notices", force: :cascade do |t|
     t.string   "title"
     t.text     "content"
     t.integer  "day_id"
