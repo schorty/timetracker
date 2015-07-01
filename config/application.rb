@@ -19,6 +19,8 @@ module Calendar
     config.time_zone = 'Berlin'
     config.active_record.default_timezone = 'Berlin'
 
+    config.filter_parameters += [:password, :password_confirmation]
+
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de

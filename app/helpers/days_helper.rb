@@ -13,9 +13,9 @@ module DaysHelper
 
   def draw_calendar_head
     content_tag(:div, nil, class: 'calendar-head') do
-      ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map do |column_label|
+      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map do |column_label|
         content_tag(:div, column_label, class: 'calendar-column-label' + (['Sat', 'Sun'].include?(column_label) ? ' calendar-weekend' : ''))
-      end.join.html_safe
+      end.unshift(draw_month_statistics).join.html_safe
     end
   end
 
@@ -41,8 +41,8 @@ module DaysHelper
     content_tag(:div, data: {row: row, column: 0}, class: 'calendar-row-label') do
       output = [
         content_tag(:div, current_day.strftime('CW %V')),
-        content_tag(:div, "Overtime: " + @statistics[:"week#{row + 1}"].printh(:overtime)),
-        content_tag(:div, "Hours worked : " + @statistics[:"week#{row + 1}"].printh(:hours_worked))
+        content_tag(:div, "Worked: " + @statistics[:"week#{row + 1}"].printh(:hours_worked)),
+        content_tag(:div, "Overtime: " + @statistics[:"week#{row + 1}"].printh(:overtime))
       ].join.html_safe
     end
   end
@@ -81,5 +81,23 @@ module DaysHelper
       link_to(fa_icon('file-o'), new_day_notice_path(content), class: 'btn btn-default calendar-entry-add-notice'),
       link_to(fa_icon('pencil'), edit_day_path(content), class: 'btn btn-default calendar-entry-edit-day')
     ].join.html_safe
+  end
+
+  def draw_month_statistics
+    month_statistics = CalendarStatistics::Statistics.new
+    (2..5).each do |i|
+      month_statistics + @statistics[:"week#{i}"]
+    end
+
+    content_tag(:div, nil, class: 'calendar-column-label') do
+      [
+        content_tag(:div, "This Month:"),
+        content_tag(:div, "Worked: " + month_statistics.printh(:hours_worked)),
+        content_tag(:div, "Overtime: " + month_statistics.printh(:overtime)),
+        content_tag(:div, "This Year:"),
+        content_tag(:div, "Worked: " + @statistics[:year].printh(:hours_worked)),
+        content_tag(:div, "Overtime: " + @statistics[:year].printh(:overtime))
+      ].join.html_safe
+    end
   end
 end

@@ -9,7 +9,7 @@
     .form-group
       = f.label :beginning_of_day
       / = f.date_select :beginning_of_day, value: (@day.new_record? ? Time.now : params[:beginning_of_day] ), html_options: {class: 'form-control'}
-      input#datepicker.form-control name="day[beginning_of_day]" value==(@day.new_record? ? Time.now.strftime('%Y-%m-%d') : @day.beginning_of_day.to_formatted_s(:db))
+      input#datepicker.form-control name="day[beginning_of_day]" value==@day.beginning_of_day.to_formatted_s(:db)
     .form-group
       = f.label :hours_worked
       = f.text_field :hours_worked, id: "hours-worked-field", class: 'form-control'

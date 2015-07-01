@@ -4,6 +4,7 @@ class CreateDays < ActiveRecord::Migration
       t.date :beginning_of_day
       t.float :hours_worked
       t.integer :business
+      t.integer :user_id
 
       t.timestamps
     end

@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails',                '~> 4.2'
 
+gem 'devise'
 gem 'faker',                '~> 1.4'
 gem 'font-awesome-rails',   '~> 4.2'
 gem 'jquery-rails',         '~> 3.1', '>= 3.1.1'

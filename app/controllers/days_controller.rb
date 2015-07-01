@@ -1,8 +1,9 @@
 class DaysController < ApplicationController
   before_action :set_day, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   def index
-    @days = Day.all.includes(:notices)
+    @days = current_user.days.includes(:notices)
     sa = CalendarStatistics::StatisticsAdministrator.new(:all)
     @statistics = sa.perform
   end
@@ -18,7 +19,7 @@ class DaysController < ApplicationController
   end
 
   def create
-    @day = Day.new(day_params)
+    @day = current_user.days.build(day_params)
 
     if @day.save
       redirect_to days_url, notice: 'Day was successfully created.'

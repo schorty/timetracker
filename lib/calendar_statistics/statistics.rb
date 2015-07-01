@@ -17,4 +17,9 @@ class CalendarStatistics::Statistics
 
     "#{hours}h, #{minutes}min"
   end
+
+  def +(statistics)
+    @hours_worked += statistics.hours_worked
+    @overtime += statistics.overtime
+  end
 end

@@ -5,3 +5,5 @@ span.help-block = notice
   p= @notice.content
 
   = link_to 'Edit', edit_notice_path(@notice)
+  | &nbsp;|&nbsp;
+  = link_to 'Delete', notice_path(@notice), method: :delete
