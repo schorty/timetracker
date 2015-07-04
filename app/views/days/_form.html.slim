@@ -1,5 +1,5 @@
 = form_for @day do |f|
-  .col-md-4.col-xs-12
+  .col-md-6.col-xs-12
     - if @day.errors.any?
       #error_explanation
         h2 = "#{pluralize(@day.errors.count, "error")} prohibited this day from being saved:"
@@ -8,22 +8,66 @@
             li = message
     .form-group
       = f.label :beginning_of_day
-      / = f.date_select :beginning_of_day, value: (@day.new_record? ? Time.now : params[:beginning_of_day] ), html_options: {class: 'form-control'}
       input#datepicker.form-control name="day[beginning_of_day]" value==@day.beginning_of_day.to_formatted_s(:db)
     .form-group
-      = f.label :hours_worked
-      = f.text_field :hours_worked, id: "hours-worked-field", class: 'form-control'
-    .form-group
-      .btn-group
-        a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="6"
-          | 6h
-        a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="8"
-          | 8h
-        a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="9"
-          | 9h
+      = f.label :beginning_of_day
+      input#datepicker.form-control name="day[beginning_of_day]" value==@day.beginning_of_day.to_formatted_s(:db)
+    = f.hidden_field :minutes_worked
     .form-group
       = f.label :business
       = f.select :business, options_for_select({'Work time' => :work_time, 'Home time' => :home_time, 'School' => :school, 'Vacation' => :vacation, 'Illness' => :illness}, 'Work time'), {}, class: 'form-control'
+    hr
+
+    = f.label "Time worked"
+    .form-group
+      ul class="nav nav-pills"
+        li data-tab="#tab-hours-decimal" class="active"
+          a href="#" Hours in decimal
+        li data-tab="#tab-hours-mins"
+          a href="#" Hours + Mins
+        li data-tab="#tab-mins"
+          a href="#" Mins
+        li data-tab="#tab-start-end"
+          a href="#" Start + End
+    .tab#tab-hours-decimal
+      .form-group
+        = f.label "Hours worked"
+        = text_field_tag :hours_decimal, 0.0, id: "hours-decimal", class: 'form-control'
+      .form-group
+        .btn-group
+          a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="6.0"
+            | 6h
+          a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="8.0"
+            | 8h
+          a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="9.0"
+            | 9h
+    .tab.hidden#tab-hours-mins
+      .form-group.col-md-6
+        = f.label "Hours"
+        = text_field_tag :hours_mins_hours, 0.0, id: "hours-mins-hours", class: 'form-control'
+      .form-group.col-md-6
+        = f.label "Minutes"
+        = text_field_tag :hours_mins_mins, 0.0, id: "hours-mins-mins", class: 'form-control'
+    .tab.hidden#tab-mins
+      .form-group
+        = f.label "Minutes"
+        = text_field_tag :hours_mins, 0.0, id: "hours-mins", class: 'form-control'
+    .tab.hidden#tab-start-end
+      .form-group.col-md-4
+        = f.label "Start"
+        = text_field_tag :hours_start, "8:00", id: "hours-start", class: 'form-control datetime', placeholder: '8:00'
+      .form-group.col-md-4
+        = f.label "End"
+        = text_field_tag :hours_end, "16:30", id: "hours-end", class: 'form-control datetime', placeholder: '16:30'
+      .form-group.col-md-4
+        = f.label "Break"
+        = text_field_tag :hours_break, "0:30", id: "hours-break", class: 'form-control datetime', placeholder: '0:30'
+      .form-group.col-md-12
+        = f.label "Time worked"
+        = text_field_tag :time_worked, "8:00", id: "time-worked", class: 'form-control datetime', disabled: true
+      .form-group.col-md-12
+        p#time-errors
+
     .actions = f.submit 'Save', class: 'btn btn-default'
 
 javascript:
@@ -31,8 +75,125 @@ javascript:
     $('#datepicker').datepicker({
       format: 'yyyy-mm-dd'
     })
+    fill_hour_input_methods()
+  })
+
+  $('#hours-decimal').on('change', function() {
+    $('#day_minutes_worked').val($(this).val() * 60)
+    fill_hour_input_methods()
   })
 
   $('a.btn-hours-worked').on('click', function() {
-    $('#hours-worked-field').val($(this).data('hours'))
+    $('#day_minutes_worked').val($(this).data('hours') * 60)
+    fill_hour_input_methods()
   })
+
+  $('.datetime').on('focus', function() {
+    previous = $(this).val()
+  }).change(function() {
+    match = $(this).val().match(/^([01]?[0-9]{1}|[2]?[0-3]{1}):[0-5]{1}[0-9]{1}$/)
+    if ($(this).prop('id') == 'hours-break') {
+      match = $(this).val().match(/^\d+:[0-5]{1}[0-9]{1}$/)
+    }
+
+    if (!!match) {
+      start = $('#hours-start').val().split(':').map(function(v) { return parseInt(v) })
+      end = $('#hours-end').val().split(':').map(function(v) { return parseInt(v) })
+      break_time = $('#hours-break').val().split(':').map(function(v) { return parseInt(v) })
+
+      if (start[0] < end[0]) {
+        hours_worked = end[0] - start[0]
+        calc_minutes_worked(start[1], end[1])
+      } else if (start[0] > end[0]) {
+        hours_worked = 24 - (end[0] - start[0])
+        calc_minutes_worked(start[1], end[1])
+      } else {
+        if (start[1] <= end[1]) {
+          hours_worked = 0
+        } else if (start[1] > end[1]) {
+          hours_worked = 24
+        }
+        calc_minutes_worked(start[1], end[1])
+      }
+
+      if (break_time[0] > hours_worked)
+        console.log('foo')
+      if (break_time[0] == hours_worked && break_time[1] > minutes_worked)
+        console.log('bar')
+
+      if (break_time[0] > hours_worked || (break_time[0] == hours_worked && break_time[1] > minutes_worked)) {
+        $('#time-errors').html('Your break seems to be longer than you\'ve actually worked')
+        $(this).val(previous)
+        return 0;
+      } else {
+        hours_worked -= break_time[0]
+        if (break_time[1] > minutes_worked) {
+          minutes_worked = 60 - (break_time[1] - minutes_worked)
+          hours_worked -= 1
+        } else {
+          minutes_worked -= break_time[1]
+        }
+      }
+
+      $('#time-worked').val(hours_worked + ':' + (minutes_worked < 10 ? '0':'') + minutes_worked)
+
+    } else {
+      $('#time-errors').html('Wrong format. Valid format is "08:35", "9:02", etc.')
+      $(this).val(previous)
+      return 0;
+    }
+  });
+
+  function calc_minutes_worked(start, end) {
+    if (start < end) {
+      minutes_worked = end - start
+    } else if (start > end) {
+      hours_worked -= 1
+      minutes_worked = 60 - (start - end)
+    } else {
+      minutes_worked = 0
+    }
+  }
+
+  // Tabs
+  $('ul.nav li').on('click', function() {
+    $('ul.nav li.active').removeClass('active')
+    $(this).addClass('active')
+
+    $('.tab').addClass('hidden')
+    $($(this).data('tab')).removeClass('hidden')
+  })
+
+  function fill_hour_input_methods() {
+    fill_hours_decimal()
+    fill_hours_mins()
+    fill_mins()
+    fill_start_end()
+  }
+
+  function fill_hours_decimal() {
+    $('#hours-decimal').val((Math.round(10 * $('#day_minutes_worked').val()) / 600).toFixed(1))
+  }
+
+  function fill_hours_mins() {
+    $('#hours-mins-hours').val(Math.floor($('#day_minutes_worked').val() / 60))
+    $('#hours-mins-mins').val($('#day_minutes_worked').val() % 60)
+  }
+
+  function fill_mins() {
+    $('#hours-mins').val($('#day_minutes_worked').val())
+  }
+
+  function fill_start_end() {
+    hours = Math.floor($('#day_minutes_worked').val() / 60) + 8
+    minutes = $('#day_minutes_worked').val() % 60
+    $('#hours-start').val("8:00")
+    $('#hours-end').val(hours + ":" + (minutes < 10 ? '0':'') + minutes)
+    $('#hours-break').val("0:00")
+    $('#time-worked').val((hours - 8) + ":" + (minutes < 10 ? '0':'') + minutes)
+  }
+
+style
+  .hidden {
+    display: none;
+  }

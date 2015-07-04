@@ -1,25 +1,25 @@
 class CalendarStatistics::Statistics
-  attr_reader :hours_worked, :overtime
+  attr_reader :minutes_worked, :overtime
 
-  def initialize(hours_worked: 0.0, overtime: 0.0)
-    @hours_worked = hours_worked
+  def initialize(minutes_worked: 0.0, overtime: 0.0)
+    @minutes_worked = minutes_worked
     @overtime = overtime
   end
 
   def printh(time = :overtime)
     if time == :overtime
-      hours = @overtime.to_i
-      minutes = ((@overtime % 1) * 60).to_i
+      hours = (@overtime / 60).to_i
+      minutes = (@overtime % 60).to_i
     else
-      hours = @hours_worked.to_i
-      minutes = ((@hours_worked % 1) * 60).to_i
+      hours = (@minutes_worked / 60).to_i
+      minutes = (@minutes_worked % 60).to_i
     end
 
     "#{hours}h, #{minutes}min"
   end
 
   def +(statistics)
-    @hours_worked += statistics.hours_worked
+    @minutes_worked += statistics.minutes_worked
     @overtime += statistics.overtime
   end
 end

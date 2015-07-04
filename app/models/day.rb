@@ -11,7 +11,7 @@ class Day < ActiveRecord::Base
   belongs_to :user
 
   validates :beginning_of_day, presence: true, uniqueness: { scope: :user_id }
-  validates :hours_worked, presence: true, if: :is_work_day?
+  validates :minutes_worked, presence: true, if: :is_work_day?
 
   private
 

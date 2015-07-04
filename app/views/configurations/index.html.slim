@@ -1,0 +1,11 @@
+.row
+  h1 Configuration
+  br
+  hr
+  h4 Daily worktime
+  p =@configuration.daily_worktime
+  hr
+  h4 Overtime bonus
+  p =@configuration.overtime_bonus
+  hr
+  = link_to 'Edit', edit_configuration_path(@configuration), class: "btn btn-default"

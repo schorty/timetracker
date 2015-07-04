@@ -5,7 +5,10 @@ p
   = @day.beginning_of_day
 p
   strong Hours worked:
-  = @day.hours_worked
+  = @day.minutes_worked / 60
+  | h,
+  = @day.minutes_worked % 60
+  | m
 p
   strong Business:
   = @day.business

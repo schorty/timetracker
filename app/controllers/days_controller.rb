@@ -4,7 +4,7 @@ class DaysController < ApplicationController
 
   def index
     @days = current_user.days.includes(:notices)
-    sa = CalendarStatistics::StatisticsAdministrator.new(:all)
+    sa = CalendarStatistics::StatisticsAdministrator.new(:all, current_user.configuration)
     @statistics = sa.perform
   end
 
@@ -48,6 +48,6 @@ class DaysController < ApplicationController
   end
 
   def day_params
-    params.require(:day).permit(:beginning_of_day, :hours_worked, :business)
+    params.require(:day).permit(:beginning_of_day, :minutes_worked, :business)
   end
 end

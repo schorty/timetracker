@@ -1,5 +1,6 @@
 = link_to 'Overview', days_path, class: "btn btn-default margin-left"
 - if user_signed_in?
+  = link_to 'Config', edit_configuration_path(current_user.configuration), class: "btn btn-default margin-left"
   = link_to 'Log out', destroy_user_session_path, class: "btn btn-default margin-left", method: :delete
 - else
   = link_to 'Log in', new_user_session_path, class: "btn btn-default margin-left"
