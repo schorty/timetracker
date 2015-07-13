@@ -6,17 +6,34 @@
         ul
           - @configuration.errors.full_messages.each do |message|
             li = message
+    = f.hidden_field :daily_worktime
     .form-group
-      = f.label :daily_worktime
-      = f.text_field :daily_worktime, id: "hours-worked-field", class: 'form-control'
-    .form-group
-      .btn-group
-        a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="6.0"
-          | 6h
-        a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="8.0"
-          | 8h
-        a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="9.0"
-          | 9h
+      ul class="nav nav-pills"
+        li data-tab="#tab-hours-decimal" class="active"
+          a.btn.btn-default href="#" Worktime in decimal
+        li data-tab="#tab-hours-mins"
+          a.btn.btn-default href="#" Worktime in Hours + Minutes
+    .tab#tab-hours-decimal.row
+      .form-group
+        = f.label :daily_worktime
+        = text_field_tag :daily_worktime, 8.0, id: "daily-worktime", class: 'form-control'
+      .form-group
+        .btn-group
+          a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="6.0"
+            | 6h
+          a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="8.0"
+            | 8h
+          a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="9.0"
+            | 9h
+
+    .tab.hidden#tab-hours-mins.row
+      .form-group.col-md-6
+        = f.label "Hours"
+        = text_field_tag :hours_mins_hours, 0.0, id: "hours-mins-hours", class: 'form-control combo-field'
+      .form-group.col-md-6
+        = f.label "Minutes"
+        = text_field_tag :hours_mins_mins, 0.0, id: "hours-mins-mins", class: 'form-control combo-field'
+
     .form-group
       = f.label :overtime_bonus
       = f.text_field :overtime_bonus, class: 'form-control'
@@ -24,5 +41,19 @@
 
 javascript:
   $('a.btn-daily-worktime').on('click', function() {
-    $('#hours-worked-field').val($(this).data('hours'))
+    $('#daily-worktime').val($(this).data('hours'))
+  })
+
+  $('#daily-worktime').on('change', function() {
+    $('#configuration_daily_worktime').val($(this).val() * 60)
+  })
+
+  $('a.btn-daily-worktime').on('click', function() {
+    $('#configuration_daily_worktime').val($(this).data('hours') * 60)
+  })
+
+  $('.combo-field').on('change', function() {
+    minutes_worked = parseInt($('#hours-mins-mins').val()) + parseInt($('#hours-mins-hours').val()) * 60
+    $('#day_minutes_worked').val(minutes_worked)
+    fill_hour_input_methods()
   })
