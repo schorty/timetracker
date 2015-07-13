@@ -1,8 +1,9 @@
 class CalendarStatistics::StatisticsAdministrator
   ALL_PERIODS = [:weeks, :month, :year].freeze
+  
+  attr_accessor :start
 
   def initialize(periods, configs, start_month = Time.now)
-
     @periods = periods == :all ? ALL_PERIODS : periods
     @periods_to_calculate = {}
     @configs = configs
@@ -50,6 +51,6 @@ class CalendarStatistics::StatisticsAdministrator
   end
 
   def get_start_time(month_number)
-    Time.now - (Time.now.month - month_number).months
+    (Time.now - (Time.now.month - month_number).months).beginning_of_month
   end
 end

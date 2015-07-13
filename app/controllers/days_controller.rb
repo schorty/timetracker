@@ -6,6 +6,7 @@ class DaysController < ApplicationController
     @days = current_user.days.includes(:notices)
     sa = CalendarStatistics::StatisticsAdministrator.new(:all, current_user.configuration, Integer(params.fetch(:month, 0)))
     @statistics = sa.perform
+    @start = sa.start
   end
 
   def show
