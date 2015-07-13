@@ -50,6 +50,6 @@ class CalendarStatistics::StatisticsAdministrator
   end
 
   def get_start_time(month_number)
-    Time.now - (month_number - Integer(Time.now.strftime("%-m"))).months
+    Time.now - (Time.now.month - month_number).months
   end
 end
