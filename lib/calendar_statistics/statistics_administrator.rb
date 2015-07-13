@@ -1,10 +1,12 @@
 class CalendarStatistics::StatisticsAdministrator
   ALL_PERIODS = [:weeks, :month, :year].freeze
 
-  def initialize(periods, configs)
+  def initialize(periods, configs, start_month = Time.now)
+
     @periods = periods == :all ? ALL_PERIODS : periods
     @periods_to_calculate = {}
     @configs = configs
+    @start = get_start_time(start_month)
 
     get_periods
   end
@@ -23,20 +25,20 @@ class CalendarStatistics::StatisticsAdministrator
   end
 
   def get_period_for_year
-    @periods_to_calculate[:year] = CalendarStatistics::Period.new(Time.now.beginning_of_year, Time.now.end_of_year.beginning_of_day)
+    @periods_to_calculate[:year] = CalendarStatistics::Period.new(@start.beginning_of_year, @start.end_of_year.beginning_of_day)
   end
 
   def get_period_for_month
-    @periods_to_calculate[:month] = CalendarStatistics::Period.new(Time.now.beginning_of_month, Time.now.end_of_month.end_of_day)
+    @periods_to_calculate[:month] = CalendarStatistics::Period.new(@start.beginning_of_month, @start.end_of_month.end_of_day)
   end
 
   def get_period_for_week
-    @periods_to_calculate[:week] = CalendarStatistics::Period.new(Time.now.beginning_of_week.end_of_day, Time.now.end_of_week.beginning_of_day)
+    @periods_to_calculate[:week] = CalendarStatistics::Period.new(@start.beginning_of_week.end_of_day, @start.end_of_week.beginning_of_day)
   end
 
   def get_periods_for_weeks
     6.times do |i|
-      start = Time.now.end_of_month.end_of_week.beginning_of_day + (1 - i).weeks
+      start = @start.end_of_month.end_of_week.beginning_of_day + (1 - i).weeks
       @periods_to_calculate[:"week#{6 - i}"] = CalendarStatistics::Period.new(start.beginning_of_week.end_of_day, start.end_of_week.beginning_of_day)
     end
   end
@@ -45,5 +47,9 @@ class CalendarStatistics::StatisticsAdministrator
     sc = CalendarStatistics::StatisticsCalculator.new(@periods_to_calculate, @configs)
 
     sc.perform
+  end
+
+  def get_start_time(month_number)
+    Time.now - (month_number - Integer(Time.now.strftime("%-m"))).months
   end
 end
