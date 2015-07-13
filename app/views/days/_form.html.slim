@@ -1,14 +1,11 @@
 = form_for @day do |f|
-  .col-md-6.col-xs-12
+  .col-md-8.col-xs-12
     - if @day.errors.any?
       #error_explanation
         h2 = "#{pluralize(@day.errors.count, "error")} prohibited this day from being saved:"
         ul
           - @day.errors.full_messages.each do |message|
             li = message
-    .form-group
-      = f.label :beginning_of_day
-      input#datepicker.form-control name="day[beginning_of_day]" value==@day.beginning_of_day.to_formatted_s(:db)
     .form-group
       = f.label :beginning_of_day
       input#datepicker.form-control name="day[beginning_of_day]" value==@day.beginning_of_day.to_formatted_s(:db)
@@ -22,18 +19,18 @@
     .form-group
       ul class="nav nav-pills"
         li data-tab="#tab-hours-decimal" class="active"
-          a href="#" Hours in decimal
+          a.btn.btn-default href="#" Hours in decimal
         li data-tab="#tab-hours-mins"
-          a href="#" Hours + Mins
+          a.btn.btn-default href="#" Hours + Minutes
         li data-tab="#tab-mins"
-          a href="#" Mins
+          a.btn.btn-default href="#" Minutes
         li data-tab="#tab-start-end"
-          a href="#" Start + End
-    .tab#tab-hours-decimal
-      .form-group
+          a.btn.btn-default href="#" Start + End
+    .tab#tab-hours-decimal.row
+      .form-group.col-md-12
         = f.label "Hours worked"
         = text_field_tag :hours_decimal, 0.0, id: "hours-decimal", class: 'form-control'
-      .form-group
+      .form-group.col-md-12
         .btn-group
           a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="6.0"
             | 6h
@@ -41,18 +38,18 @@
             | 8h
           a.btn-hours-worked.btn.btn-default.btn-inverse data-hours="9.0"
             | 9h
-    .tab.hidden#tab-hours-mins
+    .tab.hidden#tab-hours-mins.row
       .form-group.col-md-6
         = f.label "Hours"
-        = text_field_tag :hours_mins_hours, 0.0, id: "hours-mins-hours", class: 'form-control'
+        = text_field_tag :hours_mins_hours, 0.0, id: "hours-mins-hours", class: 'form-control combo-field'
       .form-group.col-md-6
         = f.label "Minutes"
-        = text_field_tag :hours_mins_mins, 0.0, id: "hours-mins-mins", class: 'form-control'
-    .tab.hidden#tab-mins
-      .form-group
+        = text_field_tag :hours_mins_mins, 0.0, id: "hours-mins-mins", class: 'form-control combo-field'
+    .tab.hidden#tab-mins.row
+      .form-group.col-md-12
         = f.label "Minutes"
         = text_field_tag :hours_mins, 0.0, id: "hours-mins", class: 'form-control'
-    .tab.hidden#tab-start-end
+    .tab.hidden#tab-start-end.row
       .form-group.col-md-4
         = f.label "Start"
         = text_field_tag :hours_start, "8:00", id: "hours-start", class: 'form-control datetime', placeholder: '8:00'
@@ -79,12 +76,18 @@ javascript:
   })
 
   $('#hours-decimal').on('change', function() {
-    $('#day_minutes_worked').val($(this).val() * 60)
+    $('#day_minutes_worked').val(parseInt($(this).val()) * 60)
     fill_hour_input_methods()
   })
 
   $('a.btn-hours-worked').on('click', function() {
-    $('#day_minutes_worked').val($(this).data('hours') * 60)
+    $('#day_minutes_worked').val(parseInt($(this).data('hours')) * 60)
+    fill_hour_input_methods()
+  })
+
+  $('.combo-field').on('change', function() {
+    minutes_worked = parseInt($('#hours-mins-mins').val()) + parseInt($('#hours-mins-hours').val()) * 60
+    $('#day_minutes_worked').val(minutes_worked)
     fill_hour_input_methods()
   })
 
@@ -136,7 +139,8 @@ javascript:
       }
 
       $('#time-worked').val(hours_worked + ':' + (minutes_worked < 10 ? '0':'') + minutes_worked)
-
+      $('#day_minutes_worked').val(hours_worked*60 + minutes_worked)
+      fill_hour_input_methods()
     } else {
       $('#time-errors').html('Wrong format. Valid format is "08:35", "9:02", etc.')
       $(this).val(previous)
@@ -191,9 +195,4 @@ javascript:
     $('#hours-end').val(hours + ":" + (minutes < 10 ? '0':'') + minutes)
     $('#hours-break').val("0:00")
     $('#time-worked').val((hours - 8) + ":" + (minutes < 10 ? '0':'') + minutes)
-  }
-
-style
-  .hidden {
-    display: none;
   }
