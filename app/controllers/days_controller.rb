@@ -4,7 +4,7 @@ class DaysController < ApplicationController
 
   def index
     @days = current_user.days.includes(:notices)
-    sa = CalendarStatistics::StatisticsAdministrator.new(:all, current_user.configuration, Integer.parse(params[:month])
+    sa = CalendarStatistics::StatisticsAdministrator.new(:all, current_user.configuration, Integer(params[:month])
     @statistics = sa.perform
   end
 
