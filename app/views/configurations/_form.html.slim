@@ -1,0 +1,28 @@
+= form_for @configuration do |f|
+  .col-md-4.col-xs-12
+    - if @configuration.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(@configuration.errors.count, "error")} prohibited this configuration from being saved:"
+        ul
+          - @configuration.errors.full_messages.each do |message|
+            li = message
+    .form-group
+      = f.label :daily_worktime
+      = f.text_field :daily_worktime, id: "hours-worked-field", class: 'form-control'
+    .form-group
+      .btn-group
+        a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="6.0"
+          | 6h
+        a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="8.0"
+          | 8h
+        a.btn-daily-worktime.btn.btn-default.btn-inverse data-hours="9.0"
+          | 9h
+    .form-group
+      = f.label :overtime_bonus
+      = f.text_field :overtime_bonus, class: 'form-control'
+    .actions = f.submit 'Save', class: 'btn btn-default'
+
+javascript:
+  $('a.btn-daily-worktime').on('click', function() {
+    $('#hours-worked-field').val($(this).data('hours'))
+  })

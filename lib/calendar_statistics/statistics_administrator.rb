@@ -1,9 +1,10 @@
 class CalendarStatistics::StatisticsAdministrator
   ALL_PERIODS = [:weeks, :month, :year].freeze
 
-  def initialize(periods)
+  def initialize(periods, configs)
     @periods = periods == :all ? ALL_PERIODS : periods
     @periods_to_calculate = {}
+    @configs = configs
 
     get_periods
   end
@@ -41,7 +42,7 @@ class CalendarStatistics::StatisticsAdministrator
   end
 
   def calculate_periods
-    sc = CalendarStatistics::StatisticsCalculator.new(@periods_to_calculate)
+    sc = CalendarStatistics::StatisticsCalculator.new(@periods_to_calculate, @configs)
 
     sc.perform
   end

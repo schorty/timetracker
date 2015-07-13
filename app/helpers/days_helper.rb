@@ -41,7 +41,7 @@ module DaysHelper
     content_tag(:div, data: {row: row, column: 0}, class: 'calendar-row-label') do
       output = [
         content_tag(:div, current_day.strftime('CW %V')),
-        content_tag(:div, "Worked: " + @statistics[:"week#{row + 1}"].printh(:hours_worked)),
+        content_tag(:div, "Worked: " + @statistics[:"week#{row + 1}"].printh(:minutes_worked)),
         content_tag(:div, "Overtime: " + @statistics[:"week#{row + 1}"].printh(:overtime))
       ].join.html_safe
     end
@@ -70,7 +70,7 @@ module DaysHelper
         day_entry = []
 
         day_entry << content_tag(:div, content.business, class: 'calendar-entry-day-line bold')
-        day_entry << content_tag(:div, '%s Hours' % content.hours_worked, class: 'calendar-entry-day-line bold') if content.hours_worked
+        day_entry << content_tag(:div, '%sh, %smin' % [content.minutes_worked/60, content.minutes_worked%60], class: 'calendar-entry-day-line bold') if content.minutes_worked
 
         content.notices.each do |notice|
           day_entry << content_tag(:div, link_to(notice.title, day_notice_path(content, notice)), class: 'calendar-entry-day-line')
@@ -92,10 +92,10 @@ module DaysHelper
     content_tag(:div, nil, class: 'calendar-column-label') do
       [
         content_tag(:div, "This Month:"),
-        content_tag(:div, "Worked: " + month_statistics.printh(:hours_worked)),
+        content_tag(:div, "Worked: " + month_statistics.printh(:minutes_worked)),
         content_tag(:div, "Overtime: " + month_statistics.printh(:overtime)),
         content_tag(:div, "This Year:"),
-        content_tag(:div, "Worked: " + @statistics[:year].printh(:hours_worked)),
+        content_tag(:div, "Worked: " + @statistics[:year].printh(:minutes_worked)),
         content_tag(:div, "Overtime: " + @statistics[:year].printh(:overtime))
       ].join.html_safe
     end
